@@ -7,8 +7,9 @@ def menu_principal():
     print(f"[1] Cadastrar ITEM")
     print(f"[2] Cadastrar USUÁRIO")
     print(f"[3] Exibir INFORMAÇÕES USUÁRIO")
-    print(f"[4] RETIRAR")
-    print(f"[5] DEVOLVER")
+    print(f"[4] Exibir ACERVO")
+    print(f"[5] RETIRAR")
+    print(f"[6] DEVOLVER")
 
 def escolha1_cadastrar_item(biblioteca_recebida):
     print(f"Itens possíveis de cadastrar: ")
@@ -39,23 +40,25 @@ def escolha2_cadastrar_usuario(biblioteca_recebida):
 
 def escolha3_exibir_informações(biblioteca_recebida):
     usario_procurado = str(input("Insira o NOME do USUÁRIO PROCURADO: "))
-    for i in range(3):
-        print(".", end='')
-        time.sleep(1)
-    print('')
-    procurado = biblioteca_recebida.usuarios.get(usario_procurado)
+    procurado = biblioteca_recebida.usuarios.get(usario_procurado)   #Procurado é o (usuario_procurado) transoformado em objeto
     if usario_procurado == procurado.nome:
         senha_acessar = str(input("Insira a SENHA para exibir as INFORMAÇÕES: "))
         if procurado.verificar_senha(senha_acessar) == True:
             print(f"EXIBINDO INFORMAÇÕES DE(A):")
             print(f"NOME: {procurado.nome}")
             print(f"EMPRÉSTIMOS ATUAIS: {procurado._emprestimos_realizados}")
+            print(f"ITENS RETIRADOS: ")
+            for item in procurado._itens_emprestados:
+                print(item)
         else:
             print("ACESSO NEGADO")
     else:
         print("USUÁRIO NÃO ENCONTRADO")
 
-def escolha4_retirar(biblioteca_recebida):
+def escolha4_exibir_acervo(bibilioteca_recebida):
+    exibir_acervo(bibilioteca_recebida)
+
+def escolha5_retirar(biblioteca_recebida):
     exibir_acervo(biblioteca_recebida)
     usuario_fornecido = str(input("Qual USUÁRIO deseja RETIRAR: "))
     if usuario_fornecido in biblioteca_recebida.usuarios.keys():
@@ -63,6 +66,19 @@ def escolha4_retirar(biblioteca_recebida):
         biblioteca_recebida.retirar(usuario_fornecido, item_fornecido)
     else:
         print("USUÁRIO não consta no SISTEMA")
+
+def escolha6_devolver(biblioteca_recebida):
+    usuario_fornecido = str(input("Qual USUÁRIO deseja DEVOLVER: "))
+    if usuario_fornecido in biblioteca_recebida.usuarios.keys():
+        usuario_objeto = biblioteca_recebida.usuarios.get(usuario_fornecido)
+        print(f"ITENS RETIRADOS: ")
+        for item in usuario_objeto._itens_emprestados:
+            print(item)
+        item_fornecido = str(input("Qual ITEM deseja DEVOLVER: "))
+        biblioteca_recebida.devolver(usuario_fornecido, item_fornecido)
+        
+
+        
 
 def exibir_acervo(biblioteca_recebida):
     for item in biblioteca_recebida.item:

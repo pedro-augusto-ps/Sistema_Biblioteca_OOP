@@ -50,26 +50,31 @@ class Emprestimo:
     """Nesta CLASSE, os atributos: (usuario_fornecido) e (item_fornecido) seram CLASSES!
     (usuario_fornecido)será utilizado para verificar a quantia de emprestimos que esse usuario já tem
     (item_fornecido)é usado para ver se o item está True, ou False"""
-    def __init__(self, usuario_fornecido, item_fornecido, data_do_emprestimo, dias_de_atraso):
+    def __init__(self, usuario_fornecido, item_fornecido, data_do_emprestimo, ativo):
         self.usuario_fornecido = usuario_fornecido  #O usuario fornecido será o usuario PASSADO no MÉTODO RETIRAR da CLASSE BIBLIOTECA
         self.item_fornecido = item_fornecido        #O Item fornecido será um OBJETO, um livro ou uma revista
         self.data_do_emprestimo = data_do_emprestimo
-        self.dias_de_atraso = dias_de_atraso
+        self.ativo = ativo
 
     def finalizar(self):
         self.item_fornecido.disponibilidade = True      #O item fornecido passado como PARAMETRO no MÉTODO RETIRAR, da CLASSE BIBLIOTECA está disponivel
         self.usuario_fornecido._emprestimos_realizados -= 1  #O Usuario passado, e seus emprestimos -1
+        self.ativo = False
 
+    def __str__(self):
+        return f"{self.item_fornecido}"
+    
 class Usuario:
     def __init__(self, nome, senha_usuario):
         self._nome = nome
         self.__senha_usuario = hashlib.sha256(senha_usuario.encode('utf-8')).hexdigest()  #Senha trasnformada em HASH de cara
         self._emprestimos_realizados = 0
+        self._itens_emprestados = []
 
     def verificar_senha(self, senha_fornecida):
         senha_fornecida = hashlib.sha256(senha_fornecida.encode('utf-8')).hexdigest()
         return senha_fornecida == self.__senha_usuario
-    
+
     @property
     def nome(self):
         return self._nome
@@ -115,19 +120,34 @@ class Biblioteca:
                     if usuario_fornecido._emprestimos_realizados < 3:   #Se aquele "objeto"usuario tem menos de 3 emprestimos
                         item_fornecido.disponibilidade = False          #A disponibilidade daquele objeto sera False
                         usuario_fornecido._emprestimos_realizados += 1  #Soma um emprestimo naquele "objeto" usuário
-                        novo_emprestimo = Emprestimo(usuario_fornecido, item_fornecido, "11 de Julho", 0)  #Cria um Emprestimo, para o "objeto"usuario 
+                        novo_emprestimo = Emprestimo(usuario_fornecido, item_fornecido, "11 de Julho", True)  #Cria um Emprestimo, para o "objeto"usuario 
                         self.emprestimos_lista.append(novo_emprestimo)  #Adiciona esse empréstimo na lista da biblioteca
+                        usuario_fornecido._itens_emprestados.append(novo_emprestimo)
                         return novo_emprestimo
             else:
                 print("Senha INCORRETA")
         else:
             print("USUÁRIO não ENCONTRADO")
             
-    def devolver(self, emprestimo):
-        if emprestimo in self.emprestimos_lista: #se o meu ITEM emprestado está na lista com os items já emprestados, removo o item da lista
-            self.emprestimos_lista.remove(emprestimo)
-        emprestimo.finalizar()                  #Finalizo meu emprestimo, chamando a funcao do emprestimo.finalizar()
-
+    def devolver(self, usuario_fornecido, item_fornecido):
+        if usuario_fornecido in self.usuarios:   #Checa se o usuário_fornecido está no dicionário de usuários
+            usuario_fornecido = self.usuarios.get(usuario_fornecido)
+            senha = str(input("Insira a SENHA: "))
+            if usuario_fornecido.verificar_senha(senha) == False:
+                print("Senha INCORRETA")
+            else:
+                emprestimo_encontrado = None
+                for emprestimo in usuario_fornecido._itens_emprestados:
+                    if emprestimo.item_fornecido.titulo == item_fornecido:
+                        emprestimo_encontrado = emprestimo 
+                if emprestimo_encontrado == None:
+                    print("Nenhun EMPRÉSTIMO ENCONTRADO")
+                if emprestimo_encontrado != None:
+                    self.emprestimos_lista.remove(emprestimo_encontrado)
+                    usuario_fornecido._itens_emprestados.remove(emprestimo_encontrado)
+                    emprestimo_encontrado.finalizar()             
+      
+            
     def cadastrar_livro(self, titulo, autor, disponibilidade):
         novo_item = Livro(titulo, autor, disponibilidade)
         self.item.append(novo_item)
@@ -138,23 +158,3 @@ class Biblioteca:
 
     def cadastrar_usuario(self, novo_usuario):
         self.usuarios[novo_usuario.nome] = novo_usuario
-"""
-l1 = Livro("Clarissa", "Machado de Assis", True)
-inspect(l1, private=True, methods=True)
-
-user0000000001 = Usuario("Maurice", "lemure")
-inspect(user0000000001, private=True, methods=True)
-
-bibliotecalocal = Biblioteca()
-inspect(bibliotecalocal, private=True, methods=True)
-
-bibliotecalocal.retirar(user0000000001, l1)
-emprestimo1 = Emprestimo(user0000000001, l1, "11 De Julho", 0)
-bibliotecalocal.devolver(emprestimo1)
-bibliotecalocal.retirar(user0000000001, l1)
-
-inspect(user0000000001, private=True, methods=True)
-inspect(bibliotecalocal, private=True, methods=True)
-inspect(l1, private=True, methods=True)
-"""
-
