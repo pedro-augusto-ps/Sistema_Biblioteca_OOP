@@ -14,7 +14,7 @@ while True:
     elif escolha == 3:
         escolha3_exibir_informações(biblioteca_recebida)
     elif escolha == 4:
-        exibir_acervo(biblioteca_recebida)
+        exibir_acervo_estilizado(biblioteca_recebida)
     elif escolha == 5:
         escolha5_retirar(biblioteca_recebida)
     elif escolha == 6:
