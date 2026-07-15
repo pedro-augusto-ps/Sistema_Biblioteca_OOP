@@ -1,6 +1,7 @@
 from Classes_Biblioteca_02 import *
 from Funcoes_Biblioteca_02 import *
 from rich import print, inspect
+import time
 
 biblioteca_recebida = Biblioteca()
 
@@ -19,4 +20,8 @@ while True:
         escolha5_retirar(biblioteca_recebida)
     elif escolha == 6:
         escolha6_devolver(biblioteca_recebida)
+    else:
+        invalido()
+    time.sleep(3)
+
         

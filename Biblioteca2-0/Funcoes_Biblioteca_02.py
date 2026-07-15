@@ -1,28 +1,26 @@
-from Classes_Biblioteca_02 import *
-from rich import inspect
-from datetime import datetime
-import time
+from Classes_Biblioteca_02 import Biblioteca, Usuario
 from Visual import *
 from getpass import getpass
+from rich import print
 
 def escolha1_cadastrar_item(biblioteca_recebida):
     itens_disponiveis()     #Exibe os ITENS disponíveis
-    escolha = int(input("Insira o [#F9DC5C bold]ITEM[/] a ser cadastrado: "))
+    escolha = escolha_item()
     if escolha == 1:
-        titulo = str(input("Insira o TÍTULO: "))
-        autor = str(input("Insira o AUTOR: "))
+        titulo = insira_titulo()
+        autor = insira_autor()
         disponibilidade = True
         biblioteca_recebida.cadastrar_livro(titulo, autor, disponibilidade) #Cria um livro
     elif escolha == 2:
-        titulo = str(input("Insira o NOME da REVISTA: "))
-        autor = str(input("Insira o AUTOR: "))
+        titulo = insira_nome_revista()
+        autor = insira_autor()
         disponibilidade = True
         biblioteca_recebida.cadastrar_revista(titulo, autor, disponibilidade) #Cria uma revista
     else:
-        opcao_invalida()
+        invalido()
 
 def escolha2_cadastrar_usuario(biblioteca_recebida):
-    nome = str(input("Insira o NOME do USUÁRIO: "))
+    nome = insira_usuario() 
     if nome in biblioteca_recebida.usuarios:  #Se o nome já está na lista da biblioteca
         usuario_cadastrado()
     insira_senha() 
@@ -31,7 +29,7 @@ def escolha2_cadastrar_usuario(biblioteca_recebida):
     biblioteca_recebida.cadastrar_usuario(usuario)  #Cadastra ele na biblioteca
 
 def escolha3_exibir_informações(biblioteca_recebida):
-    procurado = str(input("Insira o NOME do USUÁRIO PROCURADO: "))
+    procurado = insira_usuario()
     usuario = biblioteca_recebida.usuarios.get(procurado)   #Acha o usuário na lista da biblioteca
     if procurado == usuario.nome:
         insira_senha()        
@@ -48,21 +46,21 @@ def escolha4_exibir_acervo(bibilioteca_recebida):
 
 def escolha5_retirar(biblioteca_recebida):
     exibir_acervo_estilizado(biblioteca_recebida)
-    usuario = str(input("Qual USUÁRIO deseja RETIRAR: "))
+    usuario = insira_usuario()
     if usuario in biblioteca_recebida.usuarios.keys():  #Confirma se o usuário(STR) está na lista da biblioteca
-        item = str(input("Qual ITEM deseja RETIRAR: "))
+        item = insira_item()
         biblioteca_recebida.retirar(usuario, item)
     else:
         usuario_nao_encontrado()
 
 def escolha6_devolver(biblioteca_recebida):
-    usuario_fornecido = str(input("Qual USUÁRIO deseja DEVOLVER: "))
-    if usuario_fornecido in biblioteca_recebida.usuarios.keys():
-        usuario_objeto = biblioteca_recebida.usuarios.get(usuario_fornecido)
+    usuario = insira_usuario()
+    if usuario in biblioteca_recebida.usuarios.keys():
+        usuario_objeto = biblioteca_recebida.usuarios.get(usuario)
         print(f"ITENS RETIRADOS: ")
         for item in usuario_objeto._itens_emprestados:
             print(item)
-        item_fornecido = str(input("Qual ITEM deseja DEVOLVER: "))
-        biblioteca_recebida.devolver(usuario_fornecido, item_fornecido)
+        item = insira_item()
+        biblioteca_recebida.devolver(usuario, item)
         
 

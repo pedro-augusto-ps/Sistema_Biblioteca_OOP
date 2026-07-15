@@ -62,7 +62,7 @@ class Emprestimo:
         """Quando um item precisa ser devolvido, o empréstimo é finalizado por meio
         deste método"""
         
-        self.item.disponibilidade = True  #O item volta a esta disponível.      
+        self.item.disponibilidade = True  #O item volta a estar disponível.      
         self.usuario._emprestimos_realizados -= 1  #O Usuario obtem -1 empréstimo.
         self.ativo = False  #Empréstimo não está mais ativo
 
