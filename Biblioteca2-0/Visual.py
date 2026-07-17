@@ -70,7 +70,7 @@ def escolha_item():
 
 
 def invalido():
-    print(f"[#FF0000]OPÇÃO INVÁLIDA [bold]INVÁLIDA[/]")
+    print(f"[#FF0000]OPÇÃO [bold]INVÁLIDA[/]")
 
 
 #USUÁRIO
@@ -98,13 +98,11 @@ def exibir_informacoes(usuario):
             status = "[green bold]DISPONÍVEL[/]"
         else:
             status = "[red bold]INDISPONÍVEL[/]"
-        tabela.add_row(item.titulo, item.autor, status)
+        tabela.add_row(item.item.titulo, item.item.autor, status) #item. -> emprestimo, item.item -> nome do item
     print(tabela)
 #USUÁRIO
 
 #EMPRESTIMO
-def emprestimo_nao_encontrado():
-    print(f"[#2EC4B6 bold]EMPRÉSTIMO[/] [#2EC4B6]não encontrado[/]")
 
 def emprestimo_excedente():
     print(f"[#FF0000 bold]Limite de EMPRÉSTIMOS[/] [#FF0000]atingido[/]")
@@ -118,3 +116,6 @@ def item_cadastrado():
 
 def item_indisponivel():
     print(f"[#F9DC5C bold]ITEM[/] [#FF0000]indisponível[/]")
+
+def item_nao_encontrado():
+    print(f"[#2EC4B6 bold]ITEM[/] [#2EC4B6]não encontrado[/]")

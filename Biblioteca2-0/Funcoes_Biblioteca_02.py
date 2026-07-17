@@ -23,6 +23,7 @@ def escolha2_cadastrar_usuario(biblioteca_recebida):
     nome = insira_usuario() 
     if nome in biblioteca_recebida.usuarios:  #Se o nome já está na lista da biblioteca
         usuario_cadastrado()
+        return
     insira_senha() 
     senha = getpass("")
     usuario = Usuario(nome, senha)  #Cria um usuário
@@ -31,15 +32,17 @@ def escolha2_cadastrar_usuario(biblioteca_recebida):
 def escolha3_exibir_informações(biblioteca_recebida):
     procurado = insira_usuario()
     usuario = biblioteca_recebida.usuarios.get(procurado)   #Acha o usuário na lista da biblioteca
-    if procurado == usuario.nome:
-        insira_senha()        
+    try:
+        if procurado == usuario.nome:
+           insira_senha()        
         senha = getpass("")
         if usuario.verificar_senha(senha) == True:  #Verifica a senha do usuário
             exibir_informacoes(usuario)     #Exibe as informaçoes do usuário
         else:
             senha_invalida()
-    else:
-        usuario_nao_encontrado() 
+    except:
+            usuario_nao_encontrado()
+
 
 def escolha4_exibir_acervo(bibilioteca_recebida):
     exibir_acervo_estilizado(bibilioteca_recebida)
@@ -47,20 +50,25 @@ def escolha4_exibir_acervo(bibilioteca_recebida):
 def escolha5_retirar(biblioteca_recebida):
     exibir_acervo_estilizado(biblioteca_recebida)
     usuario = insira_usuario()
-    if usuario in biblioteca_recebida.usuarios.keys():  #Confirma se o usuário(STR) está na lista da biblioteca
-        item = insira_item()
-        biblioteca_recebida.retirar(usuario, item)
+    try:
+        if usuario in biblioteca_recebida.usuarios.keys():  #Confirma se o usuário(STR) está na lista da biblioteca
+            item = insira_item()
+            biblioteca_recebida.retirar(usuario, item)
+    except:
+        item_nao_encontrado()
     else:
         usuario_nao_encontrado()
 
 def escolha6_devolver(biblioteca_recebida):
     usuario = insira_usuario()
-    if usuario in biblioteca_recebida.usuarios.keys():
-        usuario_objeto = biblioteca_recebida.usuarios.get(usuario)
-        print(f"ITENS RETIRADOS: ")
-        for item in usuario_objeto._itens_emprestados:
-            print(item)
-        item = insira_item()
-        biblioteca_recebida.devolver(usuario, item)
-        
+    try:
+        if usuario in biblioteca_recebida.usuarios.keys():
+            usuario_objeto = biblioteca_recebida.usuarios.get(usuario)
+            print(f"ITENS RETIRADOS: ")
+            for item in usuario_objeto._itens_emprestados:
+                print(item)
+            item = insira_item()
+            biblioteca_recebida.devolver(usuario, item)
+    except:
+        usuario_nao_encontrado() 
 
