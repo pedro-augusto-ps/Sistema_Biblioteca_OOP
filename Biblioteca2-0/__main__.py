@@ -3,7 +3,12 @@ from Funcoes_Biblioteca_02 import *
 from rich import print, inspect
 import time
 
+caminho_user = "usuarios.json"
+caminho_item = "itens.json"
 biblioteca_recebida = Biblioteca()
+biblioteca_recebida.carregar_itens(caminho_item)
+biblioteca_recebida.carregar_usuarios(caminho_user)
+
 menu_principal()
 while True:
     try:

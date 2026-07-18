@@ -26,8 +26,8 @@ def escolha2_cadastrar_usuario(biblioteca_recebida):
         return
     insira_senha() 
     senha = getpass("")
-    usuario = Usuario(nome, senha)  #Cria um usuário
-    biblioteca_recebida.cadastrar_usuario(usuario)  #Cadastra ele na biblioteca
+    usuario = Usuario(nome, senha, False)  #Cria um usuário
+    biblioteca_recebida.cadastrar_usuario(usuario, "usuarios.json")  #Cadastra ele na biblioteca
 
 def escolha3_exibir_informações(biblioteca_recebida):
     procurado = insira_usuario()
@@ -54,16 +54,17 @@ def escolha5_retirar(biblioteca_recebida):
         if usuario in biblioteca_recebida.usuarios.keys():  #Confirma se o usuário(STR) está na lista da biblioteca
             item = insira_item()
             biblioteca_recebida.retirar(usuario, item)
-    except:
+        else:
+            usuario_nao_encontrado()
+    except AttributeError:
         item_nao_encontrado()
-    else:
-        usuario_nao_encontrado()
+
 
 def escolha6_devolver(biblioteca_recebida):
     usuario = insira_usuario()
     try:
-        if usuario in biblioteca_recebida.usuarios.keys():
-            usuario_objeto = biblioteca_recebida.usuarios.get(usuario)
+        if usuario in biblioteca_recebida.usuarios.keys():  #Confirma se o usuário(STR) está na lista da biblioteca
+            usuario_objeto = biblioteca_recebida.usuarios.get(usuario)  #Vira objeot
             print(f"ITENS RETIRADOS: ")
             for item in usuario_objeto._itens_emprestados:
                 print(item)
