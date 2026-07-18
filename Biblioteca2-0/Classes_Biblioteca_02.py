@@ -4,6 +4,11 @@ from rich import print,inspect
 from getpass import getpass
 from Visual import *
 import json
+import os
+
+PASTA_ATUAL = os.path.dirname(os.path.abspath(__file__))
+CAMINHO_ITENS = os.path.join(PASTA_ATUAL, "itens.json")
+CAMINHO_USUARIOS = os.path.join(PASTA_ATUAL, "usuarios.json")
 
 class Item(ABC):
     """Clase ITEM, abstrata e serve para criação das SUBCLASSES livro e Revista
@@ -164,8 +169,8 @@ class Biblioteca:
                 senha_invalida()
         else:
             usuario_nao_encontrado()
-        self.salvar_itens("itens.json")
-        self.salvar_usuarios("usuarios.json")
+        self.salvar_itens(CAMINHO_ITENS)
+        self.salvar_usuarios(CAMINHO_USUARIOS)
 
     def devolver(self, usuario, item):
         if usuario in self.usuarios:   #Usuário está na lista de usuários da biblioteca?
@@ -185,8 +190,8 @@ class Biblioteca:
                     emprestimo_encontrado.finalizar()                           #Finalizo o empréstimo,item volta a ser TRUE...
                 else:
                     emprestimo_nao_encontrado()          
-        self.salvar_itens("itens.json")
-        self.salvar_usuarios("usuarios.json")
+        self.salvar_itens(CAMINHO_ITENS)
+        self.salvar_usuarios(CAMINHO_USUARIOS)
             
     def cadastrar_livro(self, titulo, autor, disponibilidade):
         novo_item = Livro(titulo, autor, disponibilidade)
@@ -194,7 +199,7 @@ class Biblioteca:
             item_cadastrado()
         else:   
             self.itens.append(novo_item)
-            self.salvar_itens("itens.json")   #Salva o item no módulo JSON
+            self.salvar_itens(CAMINHO_ITENS)   #Salva o item no módulo JSON
 
     def cadastrar_revista(self, titulo, autor, disponibilidade):
         novo_item = Revista(titulo, autor, disponibilidade)
@@ -202,19 +207,21 @@ class Biblioteca:
             item_cadastrado()
         else:
             self.itens.append(novo_item)
-            self.salvar_itens("itens.json")     #Salva o item no módulo JSON
+        self.salvar_itens(CAMINHO_ITENS)     #Salva o item no módulo JSON
 
     def cadastrar_usuario(self, novo_usuario, caminho):
         self.usuarios[novo_usuario.nome] = novo_usuario
-        self.salvar_usuarios(caminho)   #Caminho é fornecido no __main__
+        self.salvar_itens(CAMINHO_USUARIOS)   #Caminho é fornecido no __main__
 
     def salvar_usuarios(self, caminho_user):
         lista_usuarios = [] #Lista para adicionar no final
-        for usuario in self.usuarios.values():  
+        for usuario in self.usuarios.values():
+            titulo_emprestado = [emp.item.titulo for emp in usuario._itens_emprestados if emp.ativo]  
             lista_usuarios.append({ 
                 "nome": usuario.nome, #Para o JSON funcionar, precisa estar semelhando ao DICT do python
                 "senha": usuario.checagem_senha,    #Transformando em Chave,valor
-                "emprestimos_realizados": usuario._emprestimos_realizados
+                "emprestimos_realizados": usuario._emprestimos_realizados,
+                "itens_titulo": titulo_emprestado,
             })
         with open(caminho_user, "w", encoding=("utf-8")) as arquivo: #Abre o caminho fornecido, escreve e salva 
             json.dump(lista_usuarios, arquivo, indent=4, ensure_ascii=False)
@@ -229,9 +236,18 @@ class Biblioteca:
                 usuario_objeto = Usuario(    #Transformando o usuario em objeto devolta, pois o JSON desfragmenta em DICT
                     nome=dados["nome"],  #Atributo nome = "nome" daquele dado
                     senha_usuario=dados["senha"],  #Atributo semha = "senha" daquele dado
-                    emprestimos=dados["emprestimos_realizados"],  #Atributo emprestimo = "emprestimo" daquele dado
                     tem_hash=True   #Usado para não fazer HASH da HASH
                 )
+                usuario_objeto._emprestimos_realizados = dados["emprestimos_realizados"]
+                if "itens_titulo" in dados:
+                    for titulo in dados["itens_titulo"]:
+                        for item_objeto in self.itens:
+                            if item_objeto.titulo.lower() == titulo.lower():
+                                novo_emprestimo = Emprestimo(usuario_objeto, item_objeto, 0, True)
+                                self.emprestimos_lista.append(novo_emprestimo)
+                                usuario_objeto._itens_emprestados.append(novo_emprestimo)
+                                item_objeto.disponibilidade = False
+                                break
                 self.usuarios[usuario_objeto.nome] = usuario_objeto #O nome do DICT é o nome do objeto
         except FileNotFoundError:
             pass
