@@ -1,0 +1,12 @@
+[
+    {
+        "nome": "1",
+        "senha": "785f3ec7eb32f30b90cd0fcf3657d388b5ff4297f2f9716ff66e9b69c05ddd09",
+        "emprestimos_realizados": 0
+    },
+    {
+        "nome": "Pedro",
+        "senha": "785f3ec7eb32f30b90cd0fcf3657d388b5ff4297f2f9716ff66e9b69c05ddd09",
+        "emprestimos_realizados": 1
+    }
+]
