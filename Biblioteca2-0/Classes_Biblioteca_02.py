@@ -6,9 +6,9 @@ from Visual import *
 import json
 import os
 
-PASTA_ATUAL = os.path.dirname(os.path.abspath(__file__))
-CAMINHO_ITENS = os.path.join(PASTA_ATUAL, "itens.json")
-CAMINHO_USUARIOS = os.path.join(PASTA_ATUAL, "usuarios.json")
+PASTA_ATUAL = os.path.dirname(os.path.abspath(__file__))        #Configura para ser DEFINITIVO
+CAMINHO_ITENS = os.path.join(PASTA_ATUAL, "itens.json")         #Configura para ser DEFINITIVO
+CAMINHO_USUARIOS = os.path.join(PASTA_ATUAL, "usuarios.json")   #Configura para ser DEFINITIVO
 
 class Item(ABC):
     """Clase ITEM, abstrata e serve para criação das SUBCLASSES livro e Revista
