@@ -35,7 +35,7 @@ e necessitei ajuda da IA para criar o caminho ABSOLUTO
 
 ## OQUE EU APRENDI?
 
-- Programação Orientada a Objetos- coloquei em prática tudo que estudei em casa.
+- Programação Orientada a Objetos
 - Tratamento de erros
 - Como salvar e ler arquivos utilizando JSON, de longe o mais desafiador, pois eu tinha escrito todo o código e precisei fazer muitas alterações para conseguir utilizar a sintaxe semelhando a um "DICT" do JSON para aceitar meus OBJETOS
 - Separação em módulos
